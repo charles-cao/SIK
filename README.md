@@ -1,6 +1,6 @@
-# SIK - Sparse Isolation Kernel
+# SIK - Simplified Isolation Kernel
 
-SIK is a Python library for anomaly and outlier detection that implements Boundary Kernel Isolation-based Nearest Neighbor Ensemble methods. This package offers efficient implementations with support for sparse matrices, GPU acceleration, and various detection modes.
+SIK is a Python library for text anomaly and outlier detection that implements Simplified Isolation Kernel. This package offers efficient implementations with support for sparse matrices, GPU acceleration, and various detection modes.
 
 ## Features
 
@@ -20,17 +20,10 @@ SIK is a Python library for anomaly and outlier detection that implements Bounda
   - Novelty detection (when training on normal samples only)
 
 ## Installation
+install from source:
 
 ```bash
-pip install SIK
-```
-
-Or install from source:
-
-```bash
-git clone https://github.com/yourusername/SIK.git
-cd SIK
-pip install -e .
+git clone https://github.com/charles-cao/SIK.git
 ```
 
 ### Requirements
@@ -46,7 +39,7 @@ pip install -e .
 import numpy as np
 from SIK import BoundaryKernel
 
-# Create some example data (with outliers)
+# Create some example embeddings (with outliers)
 X_train = np.random.randn(1000, 10)
 X_train[0:10] = X_train[0:10] + 5  # Add some outliers
 
@@ -123,4 +116,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-[Your license here]
+[GNU General Public License v3.0]
