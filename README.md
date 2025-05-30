@@ -102,13 +102,6 @@ For backward compatibility, the following classes are also available:
 - **Apple Silicon**: Set `device='mps'` for Metal acceleration
 - **Compatibility**: Legacy classes for backward compatibility with existing code
 
-## Algorithm Details
-
-The Boundary Kernel method builds an ensemble of estimators where each estimator:
-1. Samples a subset of points from the training data
-2. Constructs hyperspheres around these points
-3. Determines if test points fall inside or outside these hyperspheres
-4. Aggregates results across estimators to identify anomalies
 
 ## Contributing
 
