@@ -5,7 +5,7 @@ SIK is a Python library for text anomaly and outlier detection that implements S
 ## Features
 
 - **Multiple Implementation Options**:
-  - `BoundaryKernel`: Unified implementation with configurable backends
+  - `SIK`: Unified implementation with configurable backends
   - `BK_INNE`: Standard CPU implementation
   - `SparseINNE`: Memory-efficient implementation using sparse matrices
   - `GPU_BK_INNE`: Accelerated implementation using PyTorch and CUDA/MPS
@@ -37,14 +37,14 @@ git clone https://github.com/charles-cao/SIK.git
 
 ```python
 import numpy as np
-from SIK import BoundaryKernel
+from SIK import SIK
 
 # Create some example embeddings (with outliers)
 X_train = np.random.randn(1000, 10)
 X_train[0:10] = X_train[0:10] + 5  # Add some outliers
 
 # Create and train the model
-model = BoundaryKernel(
+model = SIK(
     max_samples=16,         # Number of samples per estimator
     n_estimators=200,       # Number of base estimators
     novelty=False,          # Outlier detection mode
@@ -64,10 +64,10 @@ print("Top 10 potential outliers (indices):", np.argsort(scores)[-10:])
 
 ## API Reference
 
-### BoundaryKernel
+### SIK
 
 ```python
-BoundaryKernel(max_samples=16, n_estimators=200, novelty=False, 
+SIK(max_samples=16, n_estimators=200, novelty=False, 
                sparse=False, device='cpu', random_state=None)
 ```
 
@@ -96,7 +96,7 @@ For backward compatibility, the following classes are also available:
 
 ## Choosing the Right Implementation
 
-- **Default usage**: `BoundaryKernel` with default parameters
+- **Default usage**: `SIK` with default parameters
 - **Memory constraints**: Set `sparse=True` for lower memory usage
 - **Large datasets**: Use GPU acceleration with `device='auto'` or `device='cuda'`
 - **Apple Silicon**: Set `device='mps'` for Metal acceleration
