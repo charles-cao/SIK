@@ -14,9 +14,9 @@ try:
 except ImportError:
     HAS_TORCH = False
 
-class BoundaryKernel:
+class SIK:
     
-    def __init__(self, max_samples=16, n_estimators=200, novelty=False, sparse=False, device='cpu', random_state=None):
+    def __init__(self, max_samples=16, n_estimators=200, novelty=True, sparse=False, device='cpu', random_state=None):
         """
         Boundary Kernel Isolation-based Nearest Neighbor Ensemble for outlier detection.
         
@@ -189,14 +189,24 @@ class BoundaryKernel:
                 radius = self.centroids_radius[i]
                 tdata = self.data[subIndex, :]
                     
-                if self.use_torch and self.device is not None:
-                    # Use PyTorch for accelerated distance computation
-                    tdata_tensor = torch.tensor(tdata, device=self.device)
-                    newdata_tensor = torch.tensor(newdata, device=self.device)
+                # if self.use_torch and self.device is not None:
+                #     # Use PyTorch for accelerated distance computation
+                #     tdata_tensor = torch.tensor(tdata, device=self.device)
+                #     newdata_tensor = torch.tensor(newdata, device=self.device)
+                #     dis = torch.cdist(tdata_tensor, newdata_tensor).cpu().numpy()
+                # else:
+                #     # Use original cdist
+                #     dis = cdist(tdata, newdata)
+
+                if self.use_torch and self.device is not None and self.device.type != 'cpu':
+                    # Use PyTorch for accelerated distance computation (GPU/MPS)
+                    tdata_tensor = torch.tensor(tdata.astype(np.float32), device=self.device)
+                    newdata_tensor = torch.tensor(newdata.astype(np.float32), device=self.device)
                     dis = torch.cdist(tdata_tensor, newdata_tensor).cpu().numpy()
                 else:
                     # Use original cdist
                     dis = cdist(tdata, newdata)
+
                 
                 centerIdx = np.argmin(dis, axis=0)
                 
@@ -270,20 +280,20 @@ class BoundaryKernel:
                 return np.dot(X_transformed, self.kme_.T)
 
 # For backward compatibility
-class BK_INNE(BoundaryKernel):
+class BK_INNE(SIK):
     def __init__(self, max_samples=16, n_estimators=200, novelty=False, random_state=None):
         super().__init__(max_samples=max_samples, n_estimators=n_estimators,
                         novelty=novelty, sparse=False, device='cpu', random_state=random_state)
         
-class SparseINNE(BoundaryKernel):
+class SparseINNE(SIK):
     def __init__(self, max_samples=16, n_estimators=200, novelty=False, random_state=None):
         super().__init__(max_samples=max_samples, n_estimators=n_estimators,
                         novelty=novelty, sparse=True, device='cpu', random_state=random_state)
                         
-class GPU_BK_INNE(BoundaryKernel):
+class GPU_BK_INNE(SIK):
     def __init__(self, max_samples=16, n_estimators=200, novelty=False, random_state=None, use_gpu=True):
         """
-        Parameters are the same as BoundaryKernel, with backward compatibility for use_gpu.
+        Parameters are the same as SIK, with backward compatibility for use_gpu.
         
         Parameters
         ----------
